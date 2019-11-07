@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+var dateFormat = require('dateformat');
+var now = new Date();
 
 const userRoute = require('./routes/userRoute')
 const campaignRoute = require('./routes/campaignRoute')
@@ -14,6 +16,15 @@ mongoose.connect('mongodb://localhost/MailMarketing', {
     useCreateIndex: true,
     useFindAndModify: false
 })
+mongoose.connection.on('connected', function () {
+    console.log('Mongoose connected');
+});
+
+mongoose.connection.on('disconnected', function () {
+    console.log('Mongoose default connection disconnected');
+});
+
+mongoose.connection.on('error', console.error.bind(console, 'MongoDb connection error'));
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -21,3 +32,10 @@ app.use(userRoute)
 app.use(campaignRoute)
 
 app.listen(port, () => console.log("connect to " + port))
+
+setInterval(() => {
+    console.log("Query DB");
+    console.log(Date.now());
+    console.log(dateFormat(now, "fullDate"));
+  
+}, 5000);
