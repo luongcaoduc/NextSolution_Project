@@ -3,8 +3,13 @@ const Schema = mongoose.Schema
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+// const Campaign = mongoose.model('Campaign')
 
 const userSchema = new Schema({
+    // _id: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Campaign'
+    // },
     user_email: {
         type: String,
         trim: true,
@@ -28,7 +33,7 @@ const userSchema = new Schema({
             }
         }
     },
-    
+
 })
 
 userSchema.methods.toJSON = function() {
@@ -41,20 +46,24 @@ userSchema.methods.toJSON = function() {
 }
 
 userSchema.methods.generateAuthToken = async function () {
-    const user = this 
-    const token = jwt .sign({ _id: user._id.toString() }, 'secretKey')
+    const user = this
+    const token = jwt.sign({
+        _id: user._id.toString()
+    }, 'secretKey')
 
     return token
 }
 
 userSchema.statics.findByCredentials = async (email, password) => {
-    const user = await User.findOne({ user_email: email })
-    
+    const user = await User.findOne({
+        user_email: email
+    })
+
     if (!user) {
         throw new Error('Unable to login')
     }
 
-    const isMatch =  await bcrypt.compare(password, user.password)
+    const isMatch = await bcrypt.compare(password, user.password)
 
     if (!isMatch) {
         throw new Error('Unable to login')
