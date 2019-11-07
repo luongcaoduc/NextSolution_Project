@@ -1,17 +1,7 @@
-const Campaign = require('../models/campaignModel')
 const express = require('express')
 const route = express.Router()
-
-route.post('/campaigns', async (req, res) => {
-    const campaign = new Campaign(req.body)
-
-    try {
-        await campaign.save()
-
-        res.status(200).send(campaign)
-    } catch (e) {
-        res.status(404).send(e)
-    }
-})
+const auth = require('../middlewares/auth')
+const campaignController = require('./../controller/campainController')
+route.post('/campaigns',auth, campaignController.creat_campaign)
 
 module.exports = route

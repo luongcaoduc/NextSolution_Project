@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const validator = require('validator')
-const campaignSchema = new Schema({
+const Campaign = new Schema({
+    userId: String,
     title: {
         type: String,
         required: true,
@@ -10,7 +11,7 @@ const campaignSchema = new Schema({
         type: String,
         required: true
     },
-    list_email: [{
+    list_email_campaign: [{
         email: {
             type: String,
             required: true,
@@ -22,21 +23,16 @@ const campaignSchema = new Schema({
                     throw new Error("Email is invalid")
                 }
             }
-
         },
-        time_sent: {
-            type: Date,
-            default: Date.now()
-        },
-        sent: {
-            type: Boolean,
-            default: false
-        }
     }],
-    
-
+    time_sent: {
+        type: Date,
+        default: Date.now()
+    },
+    sent: {
+        type: Boolean,
+        default: false
+    }
 })
 
-const Campaign = mongoose.model('Campaign', campaignSchema)
-
-module.exports = Campaign
+module.exports = mongoose.model('Campaign', Campaign)
