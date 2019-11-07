@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
 
 
 const User = require('./models/userModel')
@@ -21,9 +20,7 @@ mongoose.connect('mongodb://localhost/MailMarketing', {
 })
 
 app.use(express.json())
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+
 app.use(express.urlencoded({
     extended: true
 }))
