@@ -1,6 +1,8 @@
 const route = require('express').Router()
 const User = require('../models/userModel')
 const auth = require('../middlewares/auth')
+const userController = require('../controller/userContrller')
+
 
 route.post('/register', async (req, res) => {
     const user = new User(req.body)
