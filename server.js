@@ -8,7 +8,7 @@ require('dotenv').config()
 const port = process.env.PORT || 3000
 
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://localhost/MailMarketing', {
+mongoose.connect(`mongodb://localhost/${process.env.DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -19,5 +19,6 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(userRoute)
 app.use(campaignRoute)
+
 
 app.listen(port, () => console.log("connect to " + port))
