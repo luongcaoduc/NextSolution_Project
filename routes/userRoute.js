@@ -23,5 +23,9 @@ route.post('/login', async (req, res) => {
     }
 })
 
+route.get('/me', auth, (req, res) => {
+    res.send(req.user)
+})
+
 module.exports = route
 
