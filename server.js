@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
 
 
 const User = require('./models/userModel')
@@ -12,7 +13,7 @@ require('dotenv').config()
 const port = process.env.PORT || 3000
 
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://localhost/MailMarketing', {
+mongoose.connect(`mongodb://localhost/${process.env.DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
