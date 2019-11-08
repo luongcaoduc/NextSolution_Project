@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Campaign = mongoose.model('Campaign');
 
 module.exports = {
+    
     // Creat Campaign
-
     creat_campaign: async (req, res) => {
         var user = req.user
         var newCampaign = new Campaign({
@@ -20,19 +20,16 @@ module.exports = {
         }
     },
 
-    // find Campaign by User
-    find_campaign_by_user: async (req, res) => {
+    // find  Campaign 
+    find_campaign: async (req, res) => {
         var user = req.user
-        // Campaign.findOne({
-        //         userId: user._id
-        //     }),
-        //     (err, data) => {
-        //         if (err) console.log(err)
-        //         res.json(data)
-        //     }
         try {
             var data = await Campaign.find({
-                userId: user._id
+                userId: user._id,
+                title: {
+                    '$regex': `${req.body.text_search}`,
+                    '$options': 'i'
+                }
             })
             res.send(data)
         } catch (e) {
@@ -40,19 +37,15 @@ module.exports = {
         }
     },
 
-    // find One Campaign 
-    find_one_campaign: async (req, res) => {
+    // find Campaign by ID 
+    find_campaign_by_id: async (req, res) => {
         var user = req.user
+
         try {
-            var data = await Campaign.find({
-                    userId: user._id,
-                    title: req.body.title
-                }
-                //  || {
-                //     userId: user._id,
-                //     _id: req.params.campaignID
-                // }
-            )
+            var data = await Campaign.findById({
+                userId: user._id,
+                _id: req.params.campaignID
+            })
             res.send(data)
         } catch (e) {
             console.log(e)
