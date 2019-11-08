@@ -1,0 +1,11 @@
+const express = require('express')
+const route = express.Router()
+const mailController = require('../controller/mailController')
+const auth =  require('../middlewares/auth')
+route.post('/', auth, mailController.addMail)
+route.post('/:id', auth, mailController.editMail)
+route.get('/', auth, mailController.getMail)
+route.get('/:id', auth, mailController.getMailById)
+route.patch('/:id', auth, mailController.editMail)
+route.delete('/:id', auth, mailController.getMailById)
+module.exports = route
