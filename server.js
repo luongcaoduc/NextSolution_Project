@@ -1,12 +1,9 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
-<<<<<<< HEAD
 var dateFormat = require('dateformat');
 var now = new Date();
-=======
 const bodyParser = require('body-parser')
->>>>>>> 6aae88d298fff6ea9d62a93dc99d5f968e339d4c
 
 
 const User = require('./models/userModel')
