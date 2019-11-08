@@ -28,6 +28,6 @@ app.use(express.urlencoded({
 }))
 app.use(userRoute)
 app.use(campaignRoute)
-app.use(mailRoute)
+app.use('/mails',mailRoute)
 
 app.listen(port, () => console.log("connect to " + port))
