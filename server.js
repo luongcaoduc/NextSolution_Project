@@ -3,9 +3,10 @@ const app = express()
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 
-
+const Mail = require('./models/mailModel')
 const User = require('./models/userModel')
 const CampaignModel = require('./models/campaignModel')
+const mailRoute = require('./routes/mailRoute')
 const userRoute = require('./routes/userRoute')
 const campaignRoute = require('./routes/campaignRoute')
 
@@ -27,5 +28,6 @@ app.use(express.urlencoded({
 }))
 app.use(userRoute)
 app.use(campaignRoute)
+app.use(mailRoute)
 
 app.listen(port, () => console.log("connect to " + port))

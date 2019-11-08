@@ -33,7 +33,12 @@ const userSchema = new Schema({
             }
         }
     },
+})
 
+userSchema.virtual('emails', {
+    ref: 'Mail',
+    localField: '_id',
+    foreignField: 'owner'
 })
 
 userSchema.methods.toJSON = function() {
