@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Mail = mongoose.model('Mail')
-const User = mongoose.model('User')
+
 
 module.exports.addMail = async (req, res) => {
     const mail = new Mail({
@@ -36,7 +36,7 @@ module.exports.editMail = async (req, res) => {
 
         updates.forEach((update) => mail[update] = req.body[update])
         await mail.save()
-        res.send(mail)
+        res.status(200).send(mail)
 
     } catch (e) {
         res.status(400).send(e)
@@ -46,19 +46,19 @@ module.exports.editMail = async (req, res) => {
 module.exports.getMail = async (req, res) => {
     try {
         await req.user.populate('emails').execPopulate()
-        res.send(req.user.emails)
+        res.status(200).send(req.user.emails)
     } catch (e) {
         res.status(500).send()
     }
 }
 
 module.exports.getMailById = async (req, res) => {
-    const _id = req.params.id
-    console.log(_id)
-    console.log(req.user._id)
+    const _id = req.params.mailId
+
     try {
-        const mail = await Mail.findOne({_id: _id, owner: req.user._id})
+        const mail = await Mail.find({_id,owner: req.user._id})
         console.log(mail)
+
         if (!mail) {
             return res.status(404).send()
         }
@@ -77,7 +77,7 @@ module.exports.deleteMail = async (req, res) => {
             res.status(404).send()
         }
 
-        res.send(mail)
+        res.status(200).send(mail)
     } catch (e) {
         res.status(500).send()
     }
