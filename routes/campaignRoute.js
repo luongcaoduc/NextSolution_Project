@@ -2,6 +2,9 @@ const express = require('express')
 const route = express.Router()
 const auth = require('../middlewares/auth')
 const campaignController = require('./../controller/campainController')
-route.post('/campaigns',auth, campaignController.creat_campaign)
-
+route.post('/', auth, campaignController.creat_campaign)
+route.get('/', auth, campaignController.find_campaign_by_user)
+route.get('/one', auth, campaignController.find_one_campaign)
+route.put('/:campaignID', auth, campaignController.update_one_campaign)
+route.delete('/:campaignID', auth, campaignController.delete_campaign)
 module.exports = route

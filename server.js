@@ -27,7 +27,7 @@ app.use(express.urlencoded({
     extended: true
 }))
 app.use(userRoute)
-app.use(campaignRoute)
 app.use('/mails',mailRoute)
+app.use('/campaign' ,campaignRoute)
 
 app.listen(port, () => console.log("connect to " + port))
