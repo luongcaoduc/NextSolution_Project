@@ -19,7 +19,11 @@
   "homepage": "https://github.com/luongcaoduc/NextSolution_Project#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+<<<<<<< HEAD
     "dateformat": "^3.0.3",
+=======
+    "body-parser": "^1.19.0",
+>>>>>>> 6aae88d298fff6ea9d62a93dc99d5f968e339d4c
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.7",
