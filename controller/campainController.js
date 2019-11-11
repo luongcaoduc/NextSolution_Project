@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const Campaign = mongoose.model('Campaign');
+const response = require('../responses')
 
 module.exports = {
-    
+
     // Creat Campaign
     creat_campaign: async (req, res) => {
         var user = req.user
@@ -14,9 +15,9 @@ module.exports = {
         })
         try {
             await newCampaign.save()
-            res.send(newCampaign)
+            return response.ok(res, newCampaign)
         } catch (err) {
-            console.log(err)
+            res.send(err.statusCode)
         }
     },
 
@@ -31,9 +32,9 @@ module.exports = {
                     '$options': 'i'
                 }
             })
-            res.send(data)
+            return response.ok(res, data)
         } catch (e) {
-            console.log(e)
+            res.send(e)
         }
     },
 
@@ -46,9 +47,37 @@ module.exports = {
                 userId: user._id,
                 _id: req.params.campaignID
             })
-            res.send(data)
+            return response.ok(res, data)
         } catch (e) {
-            console.log(e)
+            res.send(e)
+        }
+    },
+
+    // find campaign true
+    find_campaign_true: async (req, res) => {
+        var user = req.user
+        try {
+            var data = await Campaign.find({
+                userId: user._id,
+                sent: true
+            })
+            return response.ok(res, data)
+        } catch (e) {
+            res.send(e)
+        }
+    },
+
+    // find campaign fasle
+    find_campaign_false: async (req, res) => {
+        var user = req.user
+        try {
+            var data = await Campaign.find({
+                userId: user._id,
+                sent: false
+            })
+            return response.ok(res, data)
+        } catch (e) {
+            res.send(e)
         }
     },
 
@@ -62,9 +91,9 @@ module.exports = {
             }, req.body, {
                 new: true
             })
-            res.send(data)
+            return response.ok(res, data)
         } catch (e) {
-            console.log(e)
+            res.status(404).send(e)
         }
     },
 
@@ -79,7 +108,7 @@ module.exports = {
             res.send(
                 'Delete Success')
         } catch (e) {
-            console.log(e)
+            res.send(e)
         }
     }
 }

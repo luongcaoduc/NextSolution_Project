@@ -41,7 +41,7 @@ userSchema.virtual('emails', {
     foreignField: 'owner'
 })
 
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
     const user = this
     const userObject = user.toObject()
 
@@ -54,7 +54,9 @@ userSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({
         _id: user._id.toString()
-    }, 'secretKey', {expiresIn: process.env.TOKENLIFETIME})
+    }, 'secretKey', {
+        expiresIn: process.env.TOKENLIFETIME
+    })
 
     return token
 }
