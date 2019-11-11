@@ -13,22 +13,12 @@ module.exports.register = async (req, res) => {
     }
 }
 
-module.exports.login = async (req, res) => {
-<<<<<<< HEAD
-    
+module.exports.login = async (req, res) => {    
     try {
         const user = await User.findByCredentials(req.body.user_email, req.body.password)
         const token = await user.generateAuthToken()
         
         res.send({ user, token })
-=======
-    console.log(req.body)
-
-    try {
-        const user = await User.findByCredentials(req.body.user_email, req.body.password)
-        const token = await user.generateAuthToken()
-        res.send({ user, token });
->>>>>>> 8061f3e94786b5529129df643f3eaa389078772a
     } catch (e) {
         res.status(404).send(e)
     }
