@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const Mail = require('./models/mailModel')
 const User = require('./models/userModel')
@@ -9,7 +10,12 @@ const CampaignModel = require('./models/campaignModel')
 const mailRoute = require('./routes/mailRoute')
 const userRoute = require('./routes/userRoute')
 const campaignRoute = require('./routes/campaignRoute')
+<<<<<<< HEAD
 const controllerCampaign = require('./controller/campainController')
+=======
+
+
+>>>>>>> dd9e0ea03da3eac1081d0a83ef6ffd52a3dea215
 require('dotenv').config()
 const port = process.env.PORT || 3000
 
@@ -20,14 +26,19 @@ mongoose.connect(`mongodb://localhost/${process.env.DB}`, {
     useCreateIndex: true,
     useFindAndModify: false
 })
+<<<<<<< HEAD
 setInterval(
     controllerCampaign.auto_send,10000
 )
-app.use(express.json())
+=======
 
+app.use(cors())
+>>>>>>> dd9e0ea03da3eac1081d0a83ef6ffd52a3dea215
+app.use(express.json())
 app.use(express.urlencoded({
     extended: true
 }))
+
 app.use(userRoute)
 app.use('/mails',mailRoute)
 app.use('/campaign' ,campaignRoute)

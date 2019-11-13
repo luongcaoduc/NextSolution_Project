@@ -1,26 +1,26 @@
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
-
+const reponses = require('../responses/index')
 module.exports.register = async (req, res) => {
+    
     const user = new User(req.body)
     try {
         await user.save()
 
-        res.status(200).send(user)
+        return reponses.created(res, user)
     } catch (e) {
-        res.status(400).send(e)
+        return reponses.conflict(res)
     }
 }
 
-module.exports.login = async (req, res) => {
-    console.log(req.body)
-
+module.exports.login = async (req, res) => {    
     try {
         const user = await User.findByCredentials(req.body.user_email, req.body.password)
         const token = await user.generateAuthToken()
-        res.send({ user, token });
+        
+        return reponses.ok(res, {user, token})
     } catch (e) {
-        res.status(404).send(e)
+        return reponses.notfound(res)
     }
 }
 
