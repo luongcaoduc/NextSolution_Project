@@ -7,5 +7,4 @@ route.get('/', auth, mailController.getMail)
 route.get('/:mailId', auth, mailController.getMailById)
 route.patch('/:id', auth, mailController.editMail)
 route.delete('/:id', auth, mailController.deleteMail)
-route.post('/sendEmail', auth, mailController.sendMail)
 module.exports = route
