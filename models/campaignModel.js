@@ -25,8 +25,7 @@ const Campaign = new Schema({
         },
     }],
     time_sent: {
-        type: Date,
-        default: Date.now()
+        type: String
     },
     sent: {
         type: Boolean,
