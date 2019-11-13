@@ -25,4 +25,7 @@ route.put('/:campaignID', auth, campaignController.update_one_campaign)
 // delete campaign by ID
 route.delete('/:campaignID', auth, campaignController.delete_campaign)
 
+// test
+route.get('/test', auth, campaignController.auto_send)
+
 module.exports = route

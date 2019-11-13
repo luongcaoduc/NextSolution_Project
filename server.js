@@ -22,7 +22,7 @@ mongoose.connect(`mongodb://localhost/${process.env.DB}`, {
     useFindAndModify: false
 })
 setInterval(
-    controllerCampaign.auto_send,10000
+    controllerCampaign.auto_send,3000
 )
 
 app.use(cors())

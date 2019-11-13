@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const Campaign = mongoose.model('Campaign');
 const response = require('../responses')
 const mailjet = require('node-mailjet')
-    .connect(process.env.USER, process.env.PASS)
+    // .connect(`${process.env.USER}`, `${process.env.PASS}`)
+    .connect('3ecb7223b6fed25836b3de2399c32e06','c661d75aec7871f95951597096e2ac21')
 module.exports = {
 
     // Creat Campaign
@@ -77,6 +78,7 @@ module.exports = {
                 userId: user._id,
                 sent: false
             })
+            console.log(data)
             return response.ok(res, data)
         } catch (e) {
             res.send(e)
@@ -121,7 +123,7 @@ module.exports = {
             })
             console.log(data)
             var time = data.map(data => {
-                return [data.time_sent, data.list_email_campaign]
+                return [data.time_sent, data.list_email_campaign,data._id,data.content,data.title]
             })
             console.log(time)
             time.forEach((data) => {
@@ -141,14 +143,18 @@ module.exports = {
                         })
                         .request({
                             "Messages": [{
+                                // "From": {
+                                //     "Email": `${process.env.EMAIL}`                                    ,
+                                //     "Name": `${process.env.NAME}` 
+                                // },
                                 "From": {
-                                    "Email": `${process.env.EMAIL}`                                    ,
-                                    "Name": `${process.env.NAME}` 
+                                    "Email": "fa.by.katarina2998@gmail.com"                                ,
+                                    "Name": "Nguyễn"
                                 },
                                 "To": data[1],
-                                "Subject": "Greetings from Mailjet.",
+                                "Subject": data[4],
                                 "TextPart": "My first Mailjet email",
-                                "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
+                                "HTMLPart": data[3],
                                 "CustomID": "AppGettingStartedTest"
                             }]
                         })
@@ -156,10 +162,8 @@ module.exports = {
 
                         .then(async (result) => {
                             await Campaign.find({
-                                sent: false
+                                _id: data[2]
                             }).update({
-                                sent: false
-                            }, {
                                 sent: true
                             })
                             console.log(result.body)
@@ -172,7 +176,6 @@ module.exports = {
             })
             res.send(data)
         } catch (e) {
-
         }
     }
 }
