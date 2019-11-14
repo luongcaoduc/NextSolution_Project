@@ -6,13 +6,14 @@ const cors = require('cors')
 
 const MailModel = require('./models/mailModel')
 const UserModel = require('./models/userModel')
-const CampaignModel = require('./models/campaignModel')
+const Campaign = require('./models/campaignModel')
 const mailRoute = require('./routes/mailRoute')
 const userRoute = require('./routes/userRoute')
 const campaignRoute = require('./routes/campaignRoute')
 const controllerCampaign = require('./controller/campainController')
 require('dotenv').config()
 const port = process.env.PORT || 3000
+require('./email/sendEmail')
 
 mongoose.Promise = global.Promise
 mongoose.connect(`mongodb://localhost/${process.env.DB}`, {
@@ -21,9 +22,9 @@ mongoose.connect(`mongodb://localhost/${process.env.DB}`, {
     useCreateIndex: true,
     useFindAndModify: false
 })
-setInterval(
-    controllerCampaign.auto_send,10000
-)
+// setInterval(
+//     controllerCampaign.auto_send,10000
+// )
 
 app.use(cors())
 app.use(express.json())
