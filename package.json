@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -18,8 +18,14 @@
   },
   "homepage": "https://github.com/luongcaoduc/NextSolution_Project#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.7.7"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.7.7",
+    "node-mailjet": "^3.3.1",
+    "validator": "^12.0.0"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
