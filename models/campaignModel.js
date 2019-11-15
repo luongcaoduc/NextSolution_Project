@@ -12,22 +12,19 @@ const Campaign = new Schema({
         required: true
     },
     list_email_campaign: [{
-        email: {
-            type: String,
-            required: true,
-            lowercase: true,
-            trim: true,
-            validate(value) {
-                if (!validator.isEmail(value)) {
-                    throw new Error("Email is invalid")
-                }
-            }
-        },
+      contact: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Contact'
+      },
+      status: {
+          type: Boolean,
+          default: false
+      }
     }],
     time_sent: {
         type: String
     },
-    sent: {
+    active: {
         type: Boolean,
         default: false
     }

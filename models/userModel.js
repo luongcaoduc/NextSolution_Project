@@ -32,8 +32,8 @@ const userSchema = new Schema({
     },
 })
 
-userSchema.virtual('emails', {
-    ref: 'Mail',
+userSchema.virtual('contacts', {
+    ref: 'Contact',
     localField: '_id',
     foreignField: 'owner'
 })

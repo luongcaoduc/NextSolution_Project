@@ -4,16 +4,16 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
-const MailModel = require('./models/mailModel')
+const ContactModel = require('./models/contactModel')
 const UserModel = require('./models/userModel')
 const Campaign = require('./models/campaignModel')
-const mailRoute = require('./routes/mailRoute')
+const contactRoute = require('./routes/mailRoute')
 const userRoute = require('./routes/userRoute')
 const campaignRoute = require('./routes/campaignRoute')
 const controllerCampaign = require('./controller/campainController')
 require('dotenv').config()
 const port = process.env.PORT || 3000
-require('./email/sendEmail')
+//require('./email/sendEmail')
 
 mongoose.Promise = global.Promise
 mongoose.connect(`mongodb://localhost/${process.env.DB}`, {
@@ -33,7 +33,7 @@ app.use(express.urlencoded({
 }))
 
 app.use(userRoute)
-app.use('/mails',mailRoute)
+app.use('/contacts', contactRoute)
 app.use('/campaign' ,campaignRoute)
 
 app.listen(port, () => console.log("connect to " + port))

@@ -1,17 +1,30 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const validator = require('validator')
-const mailSchema = new Schema({
+const contactSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    age: {
+        type: Number,
+        required: true
+    },
     email: {
         type: String,
+        required: true,
         lowercase: true,
-        trim: true,
         unique: true,
+        trim: true,
         validate(value) {
             if (!validator.isEmail(value)) {
                 throw new Error("Email is invalid")
             }
         }
+    },
+    status: {
+        type: Boolean,
+        default: false
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
@@ -20,6 +33,7 @@ const mailSchema = new Schema({
     }
 })
 
-const Mail = mongoose.model('Mail', mailSchema)
 
-module.exports = Mail
+const Contact = mongoose.model('Contact', contactSchema)
+
+module.exports = Contact

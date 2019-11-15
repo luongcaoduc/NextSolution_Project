@@ -1,33 +1,30 @@
 const mongoose = require('mongoose')
-const Mail = mongoose.model('Mail')
+const Contact = mongoose.model('Contact')
 
-var mySet = new Set()
-module.exports.addMail = async (req, res) => {
-    const mail = new Mail({
+module.exports.addContact = async (req, res) => {
+    const contact = new Contact({
         ...req.body,
-        owner: req.user._id
+        owner: {
+            _id : req.user._id,
+            
+        },
     })
 
     try {
-        const listemails = await req.user.populate('emails').execPopulate()
-        listemails.emails.forEach(item => mySet.add(item.email))
-        if (!mySet.has(mail.email)) {
-            await mail.save()
-            res.status(201).send({
-                mail
-            })
-        } else {
-            return res.status(409).send("Đã tồn tại")
-        }
+        //const listemails = await req.user.populate('emails').execPopulate()
 
+        await contact.save()
+        res.status(201).send({
+            contact
+        })
     } catch (e) {
         res.status(400).send(e)
     }
 }
 
-module.exports.editMail = async (req, res) => {
+module.exports.editContact = async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['email']
+    const allowedUpdates = ['name', 'age', 'email']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
@@ -37,7 +34,7 @@ module.exports.editMail = async (req, res) => {
     }
 
     try {
-        const mail = await Mail.findOne({
+        const contact = await Contact.findOne({
             _id: req.params.id,
             owner: req.user._id
         })
@@ -47,18 +44,21 @@ module.exports.editMail = async (req, res) => {
         }
 
         updates.forEach((update) => mail[update] = req.body[update])
-        await mail.save()
-        res.status(200).send(mail)
+        await contact.save()
+        res.status(200).send(contact)
 
     } catch (e) {
         res.status(400).send(e)
     }
 }
 
-module.exports.getMail = async (req, res) => {
+module.exports.getContacts = async (req, res) => {
     try {
-        await req.user.populate('emails').execPopulate()
-        res.status(200).send(req.user.emails)
+        const contacts = await Contact.find({owner: req.user._id})
+
+        res.status(200).send(contacts)
+        // await req.user.populate('emails').execPopulate()
+        // res.status(200).send(req.user.emails)
     } catch (e) {
         res.status(500).send()
     }
@@ -100,4 +100,3 @@ module.exports.deleteMail = async (req, res) => {
         res.status(500).send()
     }
 }
-

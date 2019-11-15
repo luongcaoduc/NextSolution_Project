@@ -3,7 +3,7 @@ const route = express.Router()
 const auth = require('../middlewares/auth')
 const campaignController = require('./../controller/campainController')
 
-
+route.get('/', auth, campaignController.getAllCampaign)
 // creat campaign
 route.post('/', auth, campaignController.creat_campaign)
 
@@ -17,10 +17,10 @@ route.get('/find-true',auth, campaignController.find_campaign_true)
 route.get('/find-false',auth, campaignController.find_campaign_false)
 
 // find campaign by ID
-route.get('/:campaignID', auth, campaignController.find_campaign_by_id)
+route.get('/:campaignID', auth, campaignController.getContactsInCampain)
 
 // update campaign  by ID
-route.put('/:campaignID', auth, campaignController.update_one_campaign)
+route.put('/', auth, campaignController.update_one_campaign)
 
 // delete campaign by ID
 route.delete('/:campaignID', auth, campaignController.delete_campaign)
