@@ -3,13 +3,10 @@ const Schema = mongoose.Schema
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-// const Campaign = mongoose.model('Campaign')
+
 
 const userSchema = new Schema({
-    // _id: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Campaign'
-    // },
+   
     user_email: {
         type: String,
         trim: true,
