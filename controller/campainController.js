@@ -3,33 +3,71 @@ const Campaign = mongoose.model('Campaign');
 const Contact = mongoose.model('Contact')
 const response = require('../responses')
 const User = mongoose.model('User')
+const Email = mongoose.model('listEmail')
+
 const mailjet = require('node-mailjet')
     .connect(process.env.USER, process.env.PASS)
+
+
+async function createEmail(campaign, contact) {
+    const email = new Email({
+        campaignId: campaign._id,
+        name: contact.name,
+        email: contact.email,
+        content: campaign.content
+    })
+    try {
+        await email.save()
+    } catch (e) {
+        console.log(e)
+    }
+
+}
+async function generateListEmail(campaign, contacts) {
+
+    if (contacts.length != 0) {
+        const contact = contacts.shift()
+        if (!contact)
+            return
+
+        createEmail(campaign, contact)
+        process.nextTick(generateListEmail, campaign, contacts)
+
+    } else {
+        return
+    }
+
+}
+
 module.exports = {
 
     // Creat Campaign
     creat_campaign: async (req, res) => {
-        var user = req.user
-        var contacts = await Contact.find({
-            owner: user._id
-        })
-        var newCampaign = new Campaign({
-            userId: user._id,
+        //console.log(user)
+        const campaign = new Campaign({
+            userId: req.user._id,
             title: req.body.title,
-            content: req.body.content,
             time_sent: req.body.time_sent,
-            list_email_campaign: req.body.list_email_campaign,
+            content: req.body.content
         })
+
+
         try {
-            await newCampaign.save()
-            return response.ok(res, newCampaign)
-        } catch (err) {
-            res.send(err.statusCode)
+            const contacts = await Contact.find({})
+            await campaign.save()
+            await generateListEmail(campaign, contacts)
+            res.status(200).send(campaign)
+            
+        } catch (error) {
+            res.status(401).send(error)
         }
+
     },
     getAllCampaign: async (req, res) => {
         try {
-            var campaigns = await Campaign.find({userId: req.user._id})
+            var campaigns = await Campaign.find({
+                userId: req.user._id
+            })
 
             res.send(campaigns)
         } catch (e) {
@@ -101,20 +139,22 @@ module.exports = {
     update_one_campaign: async (req, res) => {
         var contacts = []
         try {
-            
+
             console.log(req.query)
             var contact = await Contact.findOne({
                 owner: req.user._id,
                 _id: req.query.contactId
             })
             // console.log(contact)
-            
+
             console.log()
             var campaign = await Campaign.findOne({
                 userId: req.user._id,
                 _id: req.query.campaignId
             })
-            campaign.list_email_campaign = campaign.list_email_campaign.concat({contact})
+            campaign.list_email_campaign = campaign.list_email_campaign.concat({
+                contact
+            })
             await campaign.save()
             // var data = await Campaign.findOneAndUpdate({
             //     userId: user._id,
@@ -129,7 +169,10 @@ module.exports = {
     },
     getContactsInCampain: async (req, res) => {
         try {
-            const listemails = await Campaign.findOne({userId: req.user._id, _id: req.params.campaignID}).populate({
+            const listemails = await Campaign.findOne({
+                userId: req.user._id,
+                _id: req.params.campaignID
+            }).populate({
                 path: 'list_email_campain',
                 select: 'name email'
             }).exec()

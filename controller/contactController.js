@@ -14,6 +14,7 @@ module.exports.addContact = async (req, res) => {
         //const listemails = await req.user.populate('emails').execPopulate()
 
         await contact.save()
+
         res.status(201).send({
             contact
         })
@@ -64,39 +65,38 @@ module.exports.getContacts = async (req, res) => {
     }
 }
 
-module.exports.getMailById = async (req, res) => {
+module.exports.getContactlById = async (req, res) => {
     const _id = req.params.mailId
 
     try {
-        const mail = await Mail.find({
+        const contact = await Contact.findOne({
             _id,
             owner: req.user._id
         })
-        console.log(mail)
-
-        if (!mail) {
+        
+        if (!contact) {
             return res.status(404).send()
         }
 
-        res.send(mail)
+        res.send(contact)
     } catch (e) {
-        res.status(500).send()
+        res.status(500).send(e)
     }
 }
 
-module.exports.deleteMail = async (req, res) => {
+module.exports.deleteContact = async (req, res) => {
     try {
-        const mail = await Mail.findOneAndDelete({
+        const contact = await Contact.findOneAndDelete({
             _id: req.params.id,
             owner: req.user._id
         })
 
-        if (!mail) {
+        if (!contact) {
             res.status(404).send()
         }
 
-        res.status(200).send(mail)
+        res.status(200).send(contact)
     } catch (e) {
-        res.status(500).send()
+        res.status(500).send(e)
     }
 }

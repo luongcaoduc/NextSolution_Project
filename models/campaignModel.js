@@ -11,24 +11,19 @@ const Campaign = new Schema({
         type: String,
         required: true
     },
-    list_email_campaign: [{
-      contact: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Contact'
-      },
-      status: {
-          type: Boolean,
-          default: false
-      }
-    }],
     time_sent: {
         type: String
     },
-    active: {
+    status: {
         type: Boolean,
         default: false
     }
+})
 
+Campaign.virtual('emails', {
+    ref: 'listEmail',
+    localField: '_id',
+    foreignField: 'campaignId'
 })
 
 module.exports = mongoose.model('Campaign', Campaign)

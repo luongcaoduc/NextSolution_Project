@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const Campaign = mongoose.model('Campaign')
+const Email = mongoose.model('listEmail')
 const mailjet = require('node-mailjet')
-    .connect('9e2789fc0f241dedbc8ee64a5ea80fd1', '4cb818cd4f321bd779293bf6c1c2659c')
+    .connect('892e1e137bbd2a638ae94a7b7bd39b93', '35bd7c02923e5d76aa34832e9c726d13')
 
 
 function sleep(ms) {
@@ -17,102 +18,104 @@ function caculateTime(time) {
     return startTime - endTime
 }
 
-
-const sendEmail = async (email, title, content) => {
+const sendEmail = async (email, name, content, title) => {
     return new Promise((resolve, reject) => {
-        const request = mailjet
+
+        mailjet
             .post("send", {
                 'version': 'v3.1'
             })
             .request({
                 "Messages": [{
                     "From": {
-                        "Email": "duc200397@gmail.com",
-                        "Name": "Duc"
+                        "Email": "noname.whatever.goodperson@gmail.com",
+                        "Name": "Trần Dần"
                     },
-                    "To": [email],
+                    "To": [{
+                        "Email": email,
+                        "Name": name
+                    }],
                     "Subject": title,
                     "TextPart": "My first Mailjet email",
-                    "HTMLPart": `<h3>${content}`,
+                    "HTMLPart": `<h1>Chào ${name}</h1><br /><h2>${content}</h2>`,
                     "CustomID": "AppGettingStartedTest"
                 }]
-            }).then((result) => {
-                resolve(result.body)
+            })
+            .then((result) => {
+                resolve(result)
                 console.log(result.body)
-
             })
             .catch((err) => {
-                reject(err.statusCode)
-
+                reject(err)
+                //console.log(err.statusCode)
             })
     })
 }
 
-async function sendListEmail(emails, title, content) {
-    const email = emails.shift()
+async function sendListEmail(campaign) {
+    const email = await Email.findOne({
+        campaignId: campaign._id,
+        status: false
+    })
+    if (!email) {
+        console.log('Đã gửi xong chiến dịch ' + campaign.title)
+        return autoSendMail()
+    }
+    try {
+        await sendEmail(email.email, email.name, email.content, campaign.title)
+        email.status = true
+        await email.save()
+        console.log('Đã gửi email: ' + email.email)
+        process.nextTick(sendListEmail, campaign)
+    } catch (e) {
+        console.log(e)
+        if (e.statusCode == 429) {
+            await sleep(30000)
+            process.nextTick(sendListEmail, campaign)
+        }
+    }
+}
 
-    if (emails.length != 0) {
+
+async function SendCampaign(campaigns) {
+
+    if (campaigns.length != 0) {
+        let campaign = campaigns.shift()
         try {
-            console.log("Đã gửi " + email)
-            await sendEmail(email, title, content)
-            await sendListEmail(emails, title, content)
+            await sendListEmail(campaign)
+            campaign.status = true
+            await campaign.save()
+
         } catch (e) {
             console.log(e)
         }
-    }
 
-}
-
-async function SendCampaign(campaigns) {
-    const campaign = campaigns.shift()
-
-    if (!campaign) {
+    } else {
         return autoSendMail()
     }
+    //console.log(campaign._id)
+}
 
-
-    var emails = campaign.list_email_campaign
-    var title = campaign.title
-    var content = campaign.content
-
-
+async function autoSendMail() {
     try {
-        await sendListEmail(emails, title, content)
-        campaign.sent = true
-        await campaign.save()
-        console.log("Đã gửi " + title)
-        process.nextTick(SendCampaign, campaigns)
+
+        const campaigns = await Campaign.find({
+            status: false
+        })
+
+        filterCampaigns = campaigns.filter(item => caculateTime(item.time_sent) < 0)
+
+        if (filterCampaigns == 0) {
+            await sleep(10000)
+            console.log("Không có chiến dịch")
+            process.nextTick(autoSendMail)
+        } else {
+            await SendCampaign(filterCampaigns)
+        }
     } catch (e) {
         console.log(e)
     }
 
 
 }
-
-async function autoSendMail() {
-
-    const campaigns = await Campaign.find({
-        sent: false
-    })
-
-    const filtercampains = campaigns.filter(item => caculateTime(item.time_sent) < 0)
-
-    if (filtercampains.length == 0) {
-        console.log("Khong co Campaign")
-        await sleep(10000)
-        process.nextTick(autoSendMail)
-    } else {
-        try {
-            await SendCampaign(filtercampains)
-            process.nextTick(autoSendMail)
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-
-}
 autoSendMail()
-//sendEmail()
-
-//autoSendMail()
