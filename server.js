@@ -4,11 +4,12 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
-const MailModel = require('./models/mailModel')
+const contactModel = require('./models/contactModel')
 const UserModel = require('./models/userModel')
 const CampaignModel = require('./models/campaignModel')
+const CollectionModel = require('./models/collectionModel')
 const Campaign = mongoose.model('Campaign')
-const mailRoute = require('./routes/mailRoute')
+const contactRoutes = require('./routes/contactRoutes')
 const userRoute = require('./routes/userRoute')
 const campaignRoute = require('./routes/campaignRoute')
 const controllerCampaign = require('./controller/campainController')
@@ -22,9 +23,6 @@ mongoose.connect(`mongodb://localhost/${process.env.DB}`, {
     useCreateIndex: true,
     useFindAndModify: false
 })
-// setTimeout(controllerCampaign.auto_send1,3000)
-// setTimeout(controllerCampaign.auto_send1,1000)
-// controllerCampaign.auto_send1
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({
@@ -32,7 +30,7 @@ app.use(express.urlencoded({
 }))
 
 app.use(userRoute)
-app.use('/mails', mailRoute)
+app.use('/contact', contactRoutes)
 app.use('/campaign', campaignRoute)
 
 app.listen(port, () => console.log("connect to " + port))
@@ -99,4 +97,4 @@ async function send() {
     process.nextTick(send);
 }
 
-send()
+// send()

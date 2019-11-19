@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const validator = require('validator')
+// const validator = require('validator')
 const Campaign = new Schema({
     userId: String,
     title: {
@@ -12,26 +12,39 @@ const Campaign = new Schema({
         required: true
     },
     list_email_campaign: [{
+        email_id: {
+            type: Schema.Types.ObjectId,
+            ref: 'Contact',
+            require: true
+        },
         email: {
             type: String,
-            required: true,
-            lowercase: true,
-            trim: true,
-            validate(value) {
-                if (!validator.isEmail(value)) {
-                    throw new Error("Email is invalid")
-                }
-            }
+            require: true
         },
+        // status: {
+        //     type: Boolean,
+        //     default: false
+        // },
+        // name: {
+        //     type: String
+        // },
+        // age: {
+        //     type: Number
+        // }
+
     }],
     time_sent: {
-        type: String
+        type: Date,
     },
-    sent: {
+    status: {
         type: Boolean,
         default: false
     }
-
 })
 
-module.exports = mongoose.model('Campaign', Campaign)
+Campaign.virtual('campaigns', {
+    ref: 'Contact',
+    localField: 'email',
+    foreignField: 'email'
+})
+module.exports = mongoose.model('Campaign', Campaign, 'campaigns')

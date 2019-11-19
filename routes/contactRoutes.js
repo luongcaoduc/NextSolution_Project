@@ -1,0 +1,11 @@
+const express = require('express')
+const route = express.Router()
+const contactController = require('../controller/contactController')
+const auth =  require('../middlewares/auth')
+route.post('/', auth, contactController.addContact)
+route.get('/', auth, contactController.getContact)
+route.get('/:contactId', auth, contactController.getContactById)
+route.patch('/:id', auth, contactController.editContact)
+route.delete('/:id', auth, contactController.deleteContact)
+route.post('/import',auth,contactController.importContact)
+module.exports = route

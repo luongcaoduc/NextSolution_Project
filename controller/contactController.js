@@ -1,31 +1,39 @@
 const mongoose = require('mongoose')
-const Mail = mongoose.model('Mail')
+const Contact = mongoose.model('Contact')
 
-var mySet = new Set()
-module.exports.addMail = async (req, res) => {
-    const mail = new Mail({
+module.exports.addContact = async (req, res) => {
+    const newContact = new Contact({
         ...req.body,
         owner: req.user._id
     })
-
     try {
-        const listemails = await req.user.populate('emails').execPopulate()
-        listemails.emails.forEach(item => mySet.add(item.email))
-        if (!mySet.has(mail.email)) {
-            await mail.save()
-            res.status(201).send({
-                mail
-            })
-        } else {
-            return res.status(409).send("Đã tồn tại")
-        }
-
+        await newContact.save()
+        res.send(newContact)
     } catch (e) {
         res.status(400).send(e)
     }
 }
+module.exports.importContact = (req, res) => {
+    const listMail = req.body.listMail
+    const user = req.user
+    listMail.forEach((data) => {
+        const newContact = new Contact({
+            name: data.name,
+            age: data.age,
+            email: data.email,
+            owner: user._id
+        })
+        newContact.save(), (err, data2) => {
+            if (err) {
+                console.log(err),
+                    res.send(err)
+            }
+            res.json(data2)
+        }
+    })
+}
 
-module.exports.editMail = async (req, res) => {
+module.exports.editContact = async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['email']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -55,7 +63,7 @@ module.exports.editMail = async (req, res) => {
     }
 }
 
-module.exports.getMail = async (req, res) => {
+module.exports.getContact = async (req, res) => {
     try {
         await req.user.populate('emails').execPopulate()
         res.status(200).send(req.user.emails)
@@ -64,7 +72,7 @@ module.exports.getMail = async (req, res) => {
     }
 }
 
-module.exports.getMailById = async (req, res) => {
+module.exports.getContactById = async (req, res) => {
     const _id = req.params.mailId
 
     try {
@@ -84,7 +92,7 @@ module.exports.getMailById = async (req, res) => {
     }
 }
 
-module.exports.deleteMail = async (req, res) => {
+module.exports.deleteContact = async (req, res) => {
     try {
         const mail = await Mail.findOneAndDelete({
             _id: req.params.id,
@@ -100,4 +108,3 @@ module.exports.deleteMail = async (req, res) => {
         res.status(500).send()
     }
 }
-
