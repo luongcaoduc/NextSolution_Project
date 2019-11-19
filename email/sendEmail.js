@@ -43,7 +43,7 @@ const sendEmail = async (email, name, content, title) => {
             })
             .then((result) => {
                 resolve(result)
-                console.log(result.body)
+                //console.log(result.body)
             })
             .catch((err) => {
                 reject(err)
@@ -77,10 +77,8 @@ async function sendListEmail(campaign) {
 }
 
 
-async function SendCampaign(campaigns) {
+async function SendCampaign(campaign) {
 
-    if (campaigns.length != 0) {
-        let campaign = campaigns.shift()
         try {
             await sendListEmail(campaign)
             campaign.status = true
@@ -89,28 +87,23 @@ async function SendCampaign(campaigns) {
         } catch (e) {
             console.log(e)
         }
-
-    } else {
         return autoSendMail()
-    }
-    //console.log(campaign._id)
 }
 
 async function autoSendMail() {
     try {
-
-        const campaigns = await Campaign.find({
-            status: false
+        var endTime = Date.now()
+        const campaign = await Campaign.findOne({
+            status: false, time_sent: {"$lte": endTime}
         })
+        //console.log(campaign)
 
-        filterCampaigns = campaigns.filter(item => caculateTime(item.time_sent) < 0)
-
-        if (filterCampaigns == 0) {
+        if (!campaign) {
             await sleep(10000)
             console.log("Không có chiến dịch")
             process.nextTick(autoSendMail)
         } else {
-            await SendCampaign(filterCampaigns)
+            await SendCampaign(campaign)
         }
     } catch (e) {
         console.log(e)

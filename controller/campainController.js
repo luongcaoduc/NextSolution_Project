@@ -10,6 +10,7 @@ const mailjet = require('node-mailjet')
 
 
 async function createEmail(campaign, contact) {
+    
     const email = new Email({
         campaignId: campaign._id,
         name: contact.name,
@@ -44,10 +45,12 @@ module.exports = {
     // Creat Campaign
     creat_campaign: async (req, res) => {
         //console.log(user)
+        const date = new Date(req.body.time_sent)
+        
         const campaign = new Campaign({
             userId: req.user._id,
             title: req.body.title,
-            time_sent: req.body.time_sent,
+            time_sent: date,
             content: req.body.content
         })
 

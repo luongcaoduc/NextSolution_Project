@@ -12,7 +12,7 @@ const Campaign = new Schema({
         required: true
     },
     time_sent: {
-        type: String
+        type: Date
     },
     status: {
         type: Boolean,
