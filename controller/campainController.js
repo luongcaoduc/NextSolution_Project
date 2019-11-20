@@ -27,7 +27,7 @@ async function createEmail(campaign, contact) {
 async function generateListEmail(campaign, contacts) {
 
     if (contacts.length != 0) {
-        const contact = contacts.shift()
+        const contact = await Contact.findOne({_id: contacts.shift()._id})
         if (!contact)
             return
 
@@ -58,7 +58,7 @@ module.exports = {
         try {
             const contacts = await Contact.find({})
             await campaign.save()
-            await generateListEmail(campaign, contacts)
+            await generateListEmail(campaign, req.body.contacts || contacts)
             res.status(200).send(campaign)
             
         } catch (error) {

@@ -92,9 +92,9 @@ async function SendCampaign(campaign) {
 
 async function autoSendMail() {
     try {
-        var endTime = Date.now()
+        
         const campaign = await Campaign.findOne({
-            status: false, time_sent: {"$lte": endTime}
+            status: false, time_sent: {"$lte": Date.now()}
         })
         //console.log(campaign)
 
