@@ -18,7 +18,7 @@ const port = process.env.PORT || 3000
 require('./email/sendEmail')
 
 mongoose.Promise = global.Promise
-mongoose.connect(`mongodb://localhost/${process.env.DB}`, {
+mongoose.connect(`mongodb://mongo:27017/${process.env.DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,

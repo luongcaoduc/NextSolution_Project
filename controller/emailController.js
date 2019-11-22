@@ -16,5 +16,12 @@ module.exports.getAllEmailCampaign = async (req, res) => {
 }
 
 module.exports.editEmailCampaign = async (req, res) => {
-    
+    try {
+        const email = await Email.findByIdAndUpdate({_id: req.params.id}, {new: true})
+        await email.save()
+
+        res.status(200).send(email)
+    } catch (e) {
+        res.status(404).send(e)
+    }
 }

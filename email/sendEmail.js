@@ -47,7 +47,6 @@ const sendEmail = async (email, name, content, title) => {
             })
             .catch((err) => {
                 reject(err)
-                //console.log(err.statusCode)
             })
     })
 }
@@ -72,7 +71,7 @@ async function sendListEmail(campaign) {
         if (e.statusCode == 429) {
             await sleep(30000)
             process.nextTick(sendListEmail, campaign)
-        }
+        } 
     }
 }
 
