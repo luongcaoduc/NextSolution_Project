@@ -147,35 +147,6 @@ module.exports = {
 function waitFor(ms, msg) {
     return new Promise((resolve, reject) => setTimeout(resolve, ms))
 }
-
-
-// async function processAutoSend() {
-//     var data = await Email.findOne({
-//         status: false,
-//         time_sent: {
-//             "$lte": Date.now()
-//         }
-//     })
-
-//     if (!data) {
-//         console.log('Please Wait 10 seconds')
-//         await waitFor(10000)
-//         process.nextTick(processAutoSend)
-//     }
-//     // if (err.statusCode = 429) {
-//     //     console.log('Please Wait 30 seconds')
-//     //     await waitFor(30000)
-//     //     process.nextTick(processAutoSend)
-//     // }
-//     else {
-//         sendEmail(data)
-//         await waitFor(5000);
-//         process.nextTick(processAutoSend);
-//     }
-// }
-
-
-// check time_sent 
 function checkTime_sent(obj) {
     var startTime = obj.time_sent
     var endTime = Date.now()
