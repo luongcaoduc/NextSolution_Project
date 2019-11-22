@@ -204,7 +204,7 @@ async function sendEmail(obj) {
                     "Name": obj.name
                 }],
                 "Subject": obj.content,
-                "TextPart": "My first Mailjet email",
+                "TextPart": "Thang Duc Beo",
                 "HTMLPart": obj.title,
                 "CustomID": "AppGettingStartedTest"
             }]
@@ -221,7 +221,7 @@ async function sendEmail(obj) {
         .catch((err) => {
             console.log(err.statusCode)
             if (err.statusCode = 429)
-                return statusCode = 429
+                 statusCode = 429
         })
 }
 
@@ -260,7 +260,7 @@ async function AutoSendNew() {
         }
     })
     if (!dataCampaign) {
-        console.log('No Campaigns')
+        console.log('No Campaigns wait 10s')
         await waitFor(10000);
         process.nextTick(AutoSendNew)
     } else {
@@ -282,7 +282,7 @@ async function AutoSendNew() {
         if(statusCode = 429 )
             {
                 console.log('Waiting to restart')
-                await waitFor(50000)
+                await waitFor(5000)
             }
         await waitFor(5000);
         process.nextTick(AutoSendNew);
